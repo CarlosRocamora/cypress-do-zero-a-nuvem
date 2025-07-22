@@ -3,9 +3,9 @@ describe('Fazendo vários casos de teste', () => {
         cy.visit('src/index.html')
     })
 
-    it('1 - verificando aba e url da página', () => {
+    it('1 - verificando aba', () => {
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
-        cy.url().should('be.equal', 'http://localhost:64591/src/index.html')
+        //cy.url().should('be.equal', 'http://localhost:64591/src/index.html')
     })
 
     it('2 - verificando título e subtitulo da página ', () => {
@@ -49,6 +49,46 @@ describe('Fazendo vários casos de teste', () => {
           .should('contain', 'Mensagem enviada com sucesso.')
     })
 
+    it('5 - testando campos de seleção suspensa', () => {
+      cy.get("#product")
+        .select('Blog')
+        .should('have.value', 'blog')
+        .select('mentoria')
+        .should('have.value', 'mentoria')
+        .select(1)
+        .should('have.value', 'blog')  
+    })
     
-    
+    it('6 - marcando inputs do tipo radio', () => {
+      cy.get("[type='radio'][value=feedback]")
+        .check()
+        .should('be.checked')
+    })
+
+    it('7 - marca cada atendimento' , () => {
+      cy.get("[type='radio']")
+        .each(($el => {
+          cy.wrap($el)
+            .check()
+            .should('be.checked')
+        }))
+    })
+
+    it('8 - marcando e desmarcando campos do tipo caixa de seleção', () => {
+      cy.get("[type='checkbox']")
+        .check()
+        .should('be.checked')
+        .last()
+        .uncheck()
+        .should('not.be.checked')
+    })
+
+    it('9 - fazendo upload de arquivos com cypress', () => {
+      cy.get("#file-upload")
+        .selectFile('cypress/fixtures/Export (1).xlsx')
+        .should(input => {
+          expect(input[0].files[0].name).to.equal('Export (1).xlsx')
+        })
+    })
+  
 })

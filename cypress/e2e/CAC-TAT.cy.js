@@ -7,26 +7,26 @@ describe ('Central de Atendimento ao Cliente TAT', () => {
     cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
 })
   it('preenche os campos obrigatórios e envia o formulário', () => {
-    const longText = Cypress._.repeat('euteamo', 10)
+    const longText = Cypress._.repeat('teste', 10)
     cy.get("[name='firstName']")
       .as('nome')
       .should('be.visible')
-      .type('Jamilly') 
+      .type('Carlos') 
     cy.get("[name='lastName']")
       .as('sobrenome')
       .should('be.visible')
-      .type('Tomaz')
+      .type('Henrique')
     cy.get("[type='email']")
       .as('email')
       .should('be.visible')
-      .type('jamillytomaz@gmail.com')
+      .type('carloshenrique@gmail.com')
     cy.get("[name='open-text-area']")
       .as('areaDeTexto')
       .should('be.visible')
       .type(longText, {delay: 0})  
-    cy.get('@nome').should('have.value', 'Jamilly')
-    cy.get('@sobrenome').should('have.value', 'Tomaz')
-    cy.get('@email').should('have.value', 'jamillytomaz@gmail.com')
+    cy.get('@nome').should('have.value', 'Carlos')
+    cy.get('@sobrenome').should('have.value', 'Henrique')
+    cy.get('@email').should('have.value', 'carloshenrique@gmail.com')
     cy.contains('button', 'Enviar').click()  
     cy.get(".success")
       .should('be.visible')
@@ -152,6 +152,35 @@ describe ('Central de Atendimento ao Cliente TAT', () => {
         expect(input[0].files[0].name).to.equal('Export (1).xlsx')
       })
   })
-    
+  
+  it('seleciona um arquivo simulando um drag-and-drop', () => {
+    cy.get("[type='file']")
+      .selectFile('cypress/fixtures/Export (1).xlsx', {action: 'drag-drop'})
+      .should(input => {
+        expect(input[0].files[0].name).to.equal('Export (1).xlsx')
+      })
+  })
+
+  it('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias' , () => {
+    cy.fixture('Export (1).xlsx').as('sampleFile')
+    cy.get("[type='file']")
+      .selectFile('@sampleFile')
+      .should(input => {
+        expect(input[0].files[0].name).to.equal('Export (1).xlsx')
+      })
+  })
+
+  it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', () => {
+    cy.get("[href='privacy.html']").should('have.attr', 'target', '_blank')
+  })
+
+  it('acessa a página da política de privacidade removendo o target e então clicando no link', () => {
+    cy.get("[href='privacy.html']")
+      .invoke('removeAttr', 'target')
+      .click()
+    cy.contains('H1', 'CAC TAT - Política de Privacidade').should('be.visible')
+  })
+
+
 })
 
