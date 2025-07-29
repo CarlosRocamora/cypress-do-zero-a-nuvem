@@ -40,3 +40,12 @@ Cypress.Commands.add('completarCamposObrigatorios', (dados = {
   cy.get("[name='open-text-area']").type(dados.text)
   cy.get("[type='submit']").click()
 })
+
+Cypress.Commands.add('fillMandatoryFieldsAndSubmit', () => {
+    cy.get('#firstName').type('Carlos')
+    cy.get('#lastName').type('Henrique')
+    cy.get('#email').type('carloshenrique@gmail.com')
+    cy.get('#open-text-area').type('test')
+
+    cy.contains('button', 'Enviar').click()
+})
